@@ -43,7 +43,7 @@ Insurance.prototype.quoteInsurance = function () {
 // lo que muestro
 function Interfaz() {}
 
-Interfaz.prototype.showError = function (message, type) {
+Interfaz.prototype.showMessage = function (message, type) {
   const alert = document.createElement('div');
   if (type === 'error') {
     alert.classList.add('mensaje', 'error');
@@ -55,7 +55,7 @@ Interfaz.prototype.showError = function (message, type) {
 
   setTimeout(function () {
     document.querySelector('.mensaje').remove();
-  }, 3000);
+  }, 1500);
 }
 
 Interfaz.prototype.showResults = function (insurance, total) {
@@ -77,16 +77,24 @@ Interfaz.prototype.showResults = function (insurance, total) {
   const div = document.createElement('div');
 
   div.innerHTML = `
-    <b>Tu resumen</b> <br>
+    <p class="header">Tu resumen</p>
     Marca: ${brand} <br>
     Año: ${insurance.year} <br>
     Tipo: ${insurance.type} <br>
     Total: $ ${total}
   `
 
-  boxResults.appendChild(div);
+  const spinner = document.querySelector('#cargando img');
+  spinner.style.display = 'block';
+
+  setTimeout(function () {
+    spinner.style.display = 'none';
+    boxResults.appendChild(div);
+  }, 1500);
+
 
   console.log(brand);
+
 }
 
 // event listeners
@@ -116,14 +124,19 @@ function submitForm(e) {
   // Reviso que los campos no estan vacios
   if (selectedBrand === '' || selectedYear === '' || type === '') {
     // Interfaz imprimiendo error
-    interfaz.showError('Faltan datos, revisa e intenta de nuevo', 'error')
+    interfaz.showMessage('Faltan datos, revisa e intenta de nuevo', 'error')
   } else {
+    // Limpiar resultados anteriores
+    const resultBox = document.querySelector('#resultado div');
+    if (resultBox != null) {
+      resultBox.remove();
+    }
     // Instanciar seguro y mostrar interfaz
     const insurance = new Insurance(selectedBrand, selectedYear, type);
-
     // Cotizar el seguro
     const quantity = insurance.quoteInsurance();
     interfaz.showResults(insurance, quantity);
+    interfaz.showMessage('Cotizando...', 'correcto')
   }
 
 }
