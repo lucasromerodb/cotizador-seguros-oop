@@ -27,8 +27,17 @@ Insurance.prototype.quoteInsurance = function () {
   // Cada año de diferencia se reduce 3% el valor del seguro
   quantity -= ((yearDiff * 3) * quantity) / 100;
 
+  // Si el seguro es básico se múltiplica por 30% mas
+  if (this.type === 'basico') {
+    quantity *= 1.30;
+  } else {
+    quantity *= 1.50;
+  }
+
   console.log(quantity);
   console.log(yearDiff);
+
+  return quantity;
 }
 
 // lo que muestro
@@ -47,6 +56,37 @@ Interfaz.prototype.showError = function (message, type) {
   setTimeout(function () {
     document.querySelector('.mensaje').remove();
   }, 3000);
+}
+
+Interfaz.prototype.showResults = function (insurance, total) {
+  const boxResults = document.getElementById('resultado');
+  let brand;
+
+  switch (insurance.brand) {
+    case '1':
+      brand = 'Americano';
+      break;
+    case '2':
+      brand = 'Asiatico';
+      break;
+    case '3':
+      brand = 'Europeo';
+      break;
+  }
+
+  const div = document.createElement('div');
+
+  div.innerHTML = `
+    <b>Tu resumen</b> <br>
+    Marca: ${brand} <br>
+    Año: ${insurance.year} <br>
+    Tipo: ${insurance.type} <br>
+    Total: $ ${total}
+  `
+
+  boxResults.appendChild(div);
+
+  console.log(brand);
 }
 
 // event listeners
@@ -82,7 +122,8 @@ function submitForm(e) {
     const insurance = new Insurance(selectedBrand, selectedYear, type);
 
     // Cotizar el seguro
-    const calc = insurance.quoteInsurance(insurance);
+    const quantity = insurance.quoteInsurance();
+    interfaz.showResults(insurance, quantity);
   }
 
 }
