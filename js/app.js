@@ -1,100 +1,103 @@
 // Cotizador Constructor
-function Insurance(brand, year, type) {
-  this.brand = brand;
-  this.year = year;
-  this.type = type;
-}
-
-Insurance.prototype.quoteInsurance = function () {
-  let quantity;
-  const basicPrice = 2000;
-
-  switch (this.brand) {
-    case '1': // americano
-      quantity = basicPrice * 1.15;
-      break;
-    case '2': // asiatico
-      quantity = basicPrice * 1.05;
-      break;
-    case '3': // europeo
-      quantity = basicPrice * 1.35;
-      break;
+class Insurance {
+  constructor(brand, year, type){
+    this.brand = brand;
+    this.year = year;
+    this.type = type;
   }
 
-  // Lee el año y calcula
-  const yearDiff = new Date().getFullYear() - this.year;
+  quoteInsurance() {
+    let quantity;
+    const basicPrice = 2000;
 
-  // Cada año de diferencia se reduce 3% el valor del seguro
-  quantity -= ((yearDiff * 3) * quantity) / 100;
+    switch (this.brand) {
+      case '1': // americano
+        quantity = basicPrice * 1.15;
+        break;
+      case '2': // asiatico
+        quantity = basicPrice * 1.05;
+        break;
+      case '3': // europeo
+        quantity = basicPrice * 1.35;
+        break;
+    }
 
-  // Si el seguro es básico se múltiplica por 30% mas
-  if (this.type === 'basico') {
-    quantity *= 1.30;
-  } else {
-    quantity *= 1.50;
+    // Lee el año y calcula
+    const yearDiff = new Date().getFullYear() - this.year;
+
+    // Cada año de diferencia se reduce 3% el valor del seguro
+    quantity -= ((yearDiff * 3) * quantity) / 100;
+
+    // Si el seguro es básico se múltiplica por 30% mas
+    if (this.type === 'basico') {
+      quantity *= 1.30;
+    } else {
+      quantity *= 1.50;
+    }
+
+    console.log(quantity);
+    console.log(yearDiff);
+
+    return quantity;
   }
-
-  console.log(quantity);
-  console.log(yearDiff);
-
-  return quantity;
 }
 
 // lo que muestro
-function Interfaz() {}
+class Interfaz {
 
-Interfaz.prototype.showMessage = function (message, type) {
-  const alert = document.createElement('div');
-  if (type === 'error') {
-    alert.classList.add('mensaje', 'error');
-  } else {
-    alert.classList.add('mensaje', 'correcto');
-  }
-  alert.innerHTML = `${message}`
-  form.insertBefore(alert, document.querySelector('.form-group'));
+  showMessage(message, type) {
+    const alert = document.createElement('div');
+    if (type === 'error') {
+      alert.classList.add('mensaje', 'error');
+    } else {
+      alert.classList.add('mensaje', 'correcto');
+    }
+    alert.innerHTML = `${message}`
+    form.insertBefore(alert, document.querySelector('.form-group'));
 
-  setTimeout(function () {
-    document.querySelector('.mensaje').remove();
-  }, 1500);
-}
-
-Interfaz.prototype.showResults = function (insurance, total) {
-  const boxResults = document.getElementById('resultado');
-  let brand;
-
-  switch (insurance.brand) {
-    case '1':
-      brand = 'Americano';
-      break;
-    case '2':
-      brand = 'Asiatico';
-      break;
-    case '3':
-      brand = 'Europeo';
-      break;
+    setTimeout(function () {
+      document.querySelector('.mensaje').remove();
+    }, 1500);
   }
 
-  const div = document.createElement('div');
+  showResults(insurance, total) {
+    const boxResults = document.getElementById('resultado');
+    let brand;
 
-  div.innerHTML = `
-    <p class="header">Tu resumen</p>
-    Marca: ${brand} <br>
-    Año: ${insurance.year} <br>
-    Tipo: ${insurance.type} <br>
-    Total: $ ${total}
-  `
+    switch (insurance.brand) {
+      case '1':
+        brand = 'Americano';
+        break;
+      case '2':
+        brand = 'Asiatico';
+        break;
+      case '3':
+        brand = 'Europeo';
+        break;
+    }
 
-  const spinner = document.querySelector('#cargando img');
-  spinner.style.display = 'block';
+    const div = document.createElement('div');
 
-  setTimeout(function () {
-    spinner.style.display = 'none';
-    boxResults.appendChild(div);
-  }, 1500);
+    div.innerHTML = `
+      <p class="header">Tu resumen</p>
+      Marca: ${brand} <br>
+      Año: ${insurance.year} <br>
+      Tipo: ${insurance.type} <br>
+      Total: $ ${total}
+    `
+
+    const spinner = document.querySelector('#cargando img');
+    spinner.style.display = 'block';
+
+    setTimeout(function () {
+      spinner.style.display = 'none';
+      boxResults.appendChild(div);
+    }, 1500);
 
 
-  console.log(brand);
+    console.log(brand);
 
+  }
 }
 
 // event listeners
