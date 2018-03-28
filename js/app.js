@@ -1,14 +1,40 @@
 // Cotizador Constructor
-function Seguro(brand, year, type) {
+function Insurance(brand, year, type) {
   this.brand = brand;
   this.year = year;
   this.type = type;
 }
 
+Insurance.prototype.quoteInsurance = function () {
+  let quantity;
+  const basicPrice = 2000;
+
+  switch (this.brand) {
+    case '1': // americano
+      quantity = basicPrice * 1.15;
+      break;
+    case '2': // asiatico
+      quantity = basicPrice * 1.05;
+      break;
+    case '3': // europeo
+      quantity = basicPrice * 1.35;
+      break;
+  }
+
+  // Lee el año y calcula
+  const yearDiff = new Date().getFullYear() - this.year;
+
+  // Cada año de diferencia se reduce 3% el valor del seguro
+  quantity -= ((yearDiff * 3) * quantity) / 100;
+
+  console.log(quantity);
+  console.log(yearDiff);
+}
+
 // lo que muestro
 function Interfaz() {}
 
-Interfaz.prototype.validateForm = function (message, type) {
+Interfaz.prototype.showError = function (message, type) {
   const alert = document.createElement('div');
   if (type === 'error') {
     alert.classList.add('mensaje', 'error');
@@ -50,10 +76,13 @@ function submitForm(e) {
   // Reviso que los campos no estan vacios
   if (selectedBrand === '' || selectedYear === '' || type === '') {
     // Interfaz imprimiendo error
-    interfaz.validateForm('Faltan datos, revisa e intenta de nuevo', 'error')
+    interfaz.showError('Faltan datos, revisa e intenta de nuevo', 'error')
   } else {
-    interfaz.validateForm('Muchas gracias por confiar en nosotros', 'correcto')
-    console.log('Asegurado');
+    // Instanciar seguro y mostrar interfaz
+    const insurance = new Insurance(selectedBrand, selectedYear, type);
+
+    // Cotizar el seguro
+    const calc = insurance.quoteInsurance(insurance);
   }
 
 }
